@@ -8,8 +8,8 @@ class UrlMappings {
         }
 
         "/"(view:"/index")
+
         "500"(view:'/error')
-		
 		"/api"(resources:"root")
 			"/api/persons"(resources:"person")
 			"/api/customers"(resources:"customer") {

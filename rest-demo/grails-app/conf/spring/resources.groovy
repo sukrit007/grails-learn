@@ -2,14 +2,14 @@ import com.meltmedia.Account;
 import com.meltmedia.Customer;
 import com.meltmedia.Person
 
-import com.meltmedia.representations.RootRepresentation;
-
+import com.meltmedia.representations.RootRepresentation
+import grails.rest.render.errors.VndErrorJsonRenderer;
 import grails.rest.render.hal.HalJsonCollectionRenderer;
 import grails.rest.render.hal.HalJsonRenderer;
 
 // Place your Spring DSL code here
 beans = {
-	vndJsonErrorRenderer(grails.rest.render.errors.VndErrorJsonRenderer)
+	vndJsonErrorRenderer(VndErrorJsonRenderer)
 	
 	halRootRenderer(HalJsonRenderer, RootRepresentation)
 	
@@ -21,9 +21,6 @@ beans = {
 	
 	halAccountsRenderer(HalJsonCollectionRenderer, Account)
 	halAccountRenderer(HalJsonRenderer, Account)
-
-    halCustomerAccountsRenderer(HalJsonCollectionRenderer, CustomerAccountRepresentation)
-    halCustomerAccountRenderer(HalJsonRenderer, CustomerAccountRepresentation)
 
 
 }

@@ -2,6 +2,7 @@ package com.meltmedia
 
 
 import grails.transaction.Transactional
+import static org.springframework.http.HttpStatus.*
 
 @Transactional
 class CustomerAccountController {
@@ -11,11 +12,13 @@ class CustomerAccountController {
     def update(Account account) {
         def customer = Customer.get params.customerId
         if (!account || !customer) {
-            return render(status:404)
+            render(status:NOT_FOUND)
         }
-        customer.addToAccounts account
-        customer.save flush:true
-        respond  linkAccount(account)
+        else {
+            customer.addToAccounts account
+            customer.save flush:true
+            respond  linkAccount(account)
+        }
     }
 
     def index() {
@@ -28,34 +31,42 @@ class CustomerAccountController {
             linkAccount it})
     }
 
-    def show(Account account) {
-        def customer = Customer.get params.customerId
-        if (account && customer && customer.accounts.contains(account)) {
-            respond account
-        }
-        else {
-            render status: 404
-        }
-
+    def show() {
+        respond findAccount()
     }
 
-    def delete(Account account) {
+
+
+    def delete() {
         def customer = Customer.get params.customerId
-        if( account && customer && customer.accounts.contains(account) ) {
+        def account = findAccount()
+        if( account && customer) {
             customer.removeFromAccounts account
             customer.save flush:true
-            render status: 204
+            render status: NO_CONTENT
         }
         else {
-            render status: 404
+            render status: NOT_FOUND
         }
 
     }
 
-    def linkAccount(Account account) {
+
+    private def Account findAccount() {
+        Account.createCriteria().get {
+            and {
+                customers {
+                    eq 'id', params.customerId.toLong()
+                }
+                eq 'id', params.id.toLong()
+            }
+        }
+    }
+
+    private def linkAccount(Account account) {
         account.customers = null
         account.link rel:'customerAccount', href: g.createLink(
-                controller: 'customerAccount',id:account.id,
+                resource: 'customerAccount',id:account.id,
                 action: 'show',
                 params:[customerId:params.customerId], absolute: true)
         account
