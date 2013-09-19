@@ -1,0 +1,7 @@
+rest-demo.iml
+rest-demo-grailsPlugins.iml
+target
+target-eclipse
+out
+.settings
+.idea
